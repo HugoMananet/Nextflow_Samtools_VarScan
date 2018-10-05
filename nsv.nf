@@ -1,11 +1,17 @@
 #!/usr/bin/env nextflow
 
-Reffile = Channel.fromPath( "${params.ref}" )
-Indexfile = Channel.fromPath( "${params.index}" )
-Dictfile = Channel.fromPath( "${params.dict}" )
+// Reffile = Channel.fromPath( params.ref )
+// Indexfile = Channel.fromPath( params.index )
+// Dictfile = Channel.fromPath( params.dict )
 
-params.bam = "${params.initfiles}"
-Bamfile = Channel.fromPath(params.bam)
+ref = file(params.ref)
+ref_index = file(params.ref+'.fai')
+ref_dict = file(params.dict)
+
+
+// params.initfilesdir = "/mnt/isilon_cifs/BIO_INFO/Hugo/Nxf_Samtools_VarScan/VCF_VARSCAN"
+bamfile = Channel.fromPath(params.initfilesdir+'/*.bam')
+
 
 process samtools_mpileup{
 
@@ -13,10 +19,10 @@ publishDir "${params.resdir}/", mode: 'copy'
 
 
 	input:
-	file (bam) from Bamfile
-	file (ref) from Reffile
-	file (index) from Indexfile
-	file (dictionary) from Dictfile
+	file (bam) from bamfile
+	file (ref) from ref
+	file (index) from ref_index
+	file (dictionary) from ref_dict
 
 	output:
 	file ("${bam}.mpileup") into pileup
@@ -37,31 +43,31 @@ publishDir "${params.resdir}/", mode: 'copy'
 }
 
 
-process varscan_mpileup2cns{
-
-
-publishDir "${params.resdir}/", mode: 'copy'
-
-	input:
-		file (pileupfile) from pileup
-
-
-	output:
-		file ("${pileupfile}.vcf.varscan") into output_vcf_varscan
-
-
-
-	"""
-		java -Xmx2g -jar /opt/varscan_2.3.6/VarScan.jar mpileup2cns \
-		${pileupfile} \
-		--min-coverage 0 \
-		--min-reads2 1 \
-		--min-var-freq 0.001 \
-		--min-avg-qual 0   \
-		--output-vcf 1 \
-		--variants \
-		--strand-filter 0 \
-		> "${pileupfile}.vcf.varscan"
-	"""
-
-}
+// process varscan_mpileup2cns{
+//
+//
+// publishDir "${params.resdir}/", mode: 'copy'
+//
+// 	input:
+// 		file (pileupfile) from pileup
+//
+//
+// 	output:
+// 		file ("${pileupfile}.vcf.varscan") into output_vcf_varscan
+//
+//
+//
+// 	"""
+// 		java -Xmx2g -jar /opt/varscan_2.3.6/VarScan.jar mpileup2cns \
+// 		${pileupfile} \
+// 		--min-coverage 0 \
+// 		--min-reads2 1 \
+// 		--min-var-freq 0.001 \
+// 		--min-avg-qual 0   \
+// 		--output-vcf 1 \
+// 		--variants \
+// 		--strand-filter 0 \
+// 		> "${pileupfile}.vcf.varscan"
+// 	"""
+//
+// }
