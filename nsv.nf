@@ -38,31 +38,31 @@ publishDir "${params.resdir}/", mode: 'copy'
 }
 
 
-// process varscan_mpileup2cns{
-//
-//
-// publishDir "${params.resdir}/", mode: 'copy'
-//
-// 	input:
-// 		file (pileupfile) from pileup
-//
-//
-// 	output:
-// 		file ("${pileupfile}.vcf.varscan") into output_vcf_varscan
-//
-//
-//
-// 	"""
-// 		java -Xmx2g -jar /opt/varscan_2.3.6/VarScan.jar mpileup2cns \
-// 		${pileupfile} \
-// 		--min-coverage 0 \
-// 		--min-reads2 1 \
-// 		--min-var-freq 0.001 \
-// 		--min-avg-qual 0   \
-// 		--output-vcf 1 \
-// 		--variants \
-// 		--strand-filter 0 \
-// 		> "${pileupfile}.vcf.varscan"
-// 	"""
-//
-// }
+process varscan_mpileup2cns{
+
+
+publishDir "${params.resdir}/", mode: 'copy'
+
+	input:
+		file (pileupfile) from pileup
+
+
+	output:
+		file ("${pileupfile}.vcf.varscan") into output_vcf_varscan
+
+
+
+	"""
+		java -Xmx2g -jar /opt/varscan_2.3.6/VarScan.jar mpileup2cns \
+		${pileupfile} \
+		--min-coverage 0 \
+		--min-reads2 1 \
+		--min-var-freq 0.001 \
+		--min-avg-qual 0   \
+		--output-vcf 1 \
+		--variants \
+		--strand-filter 0 \
+		> "${pileupfile}.vcf.varscan"
+	"""
+
+}
