@@ -1,15 +1,10 @@
 #!/usr/bin/env nextflow
 
-// Reffile = Channel.fromPath( params.ref )
-// Indexfile = Channel.fromPath( params.index )
-// Dictfile = Channel.fromPath( params.dict )
-
 ref = file(params.ref)
 ref_index = file(params.ref+'.fai')
 ref_dict = file(params.dict)
 
 
-// params.initfilesdir = "/mnt/isilon_cifs/BIO_INFO/Hugo/Nxf_Samtools_VarScan/VCF_VARSCAN"
 bamfile = Channel.fromPath(params.initfilesdir+'/*.bam')
 
 
