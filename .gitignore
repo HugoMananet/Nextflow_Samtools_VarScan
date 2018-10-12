@@ -2,3 +2,4 @@
 work/*
 VCF_VARSCAN/*
 .nextflow*
+log_commandes
